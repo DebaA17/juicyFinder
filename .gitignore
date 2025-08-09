@@ -1,0 +1,12 @@
+.vscode/
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+node_modules/
+__pycache__/
+.env
+.env.*
+.idea/
+*.log
