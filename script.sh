@@ -68,7 +68,21 @@ for group in "${!FILE_GROUPS[@]}"; do
   print_section "$group" "${found_files[@]}"
 done
 
-
+# SUID Binary Checker
+echo -e "${CYAN}🔒 Checking for SUID binaries...${NC}"
+mapfile -t suid_bins < <(find "$SCAN_PATH" -perm -4000 -type f 2>/dev/null)
+if [ "${#suid_bins[@]}" -gt 0 ]; then
+  echo -e "${YELLOW}--- SUID Binaries (${#suid_bins[@]} found) ---${NC}"
+  for bin in "${suid_bins[@]}"; do
+    perms=$(stat -c '%A' "$bin")
+    owner=$(stat -c '%U' "$bin")
+    echo -e "  ${GREEN}[+]${NC} $bin (${perms}, owner: $owner)"
+  done
+  echo ""
+  echo -e "${CYAN}Reference: https://gtfobins.github.io/ (GTFOBins: SUID binary list)${NC}"
+else
+  echo -e "${GREEN}No SUID binaries found in $SCAN_PATH.${NC}"
+fi
 
 echo -e "${CYAN}Scan complete.${NC}"
 
